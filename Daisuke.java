@@ -14,7 +14,7 @@ public class Daisuke {
 	sn.addLink(new Link("is-a","Taro","NIT-student",sn));
 
 	// 太郎の専門は人工知能である．
-	sn.addLink(new Link("speciality","Taro","AI",sn));
+	sn.addLink(new Link("speciality","Sugidai","AI",sn));
 	
 	// フェラーリは車である．
 	sn.addLink(new Link("is-a","Ferrari","car",sn));
