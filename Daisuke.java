@@ -42,6 +42,7 @@ public class Daisuke {
 	query.add(new Link("is-a","?y","student"));
 	query.add(new Link("hobby","?y","baseball"));
 	sn.query(query);
+	    System.out.print("aaa");
     }    
 }
 
