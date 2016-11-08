@@ -16,13 +16,8 @@ public class Daisuke {
 	// 大輔は名古屋工業大学の学生である．
 	sn.addLink(new Link("is-a","Daisuke","NIT-student",sn));
 
-<<<<<<< Updated upstream
-	// 太郎の専門は人工知能である．
-	sn.addLink(new Link("speciality","Simano","AI",sn));
-=======
 	// 大輔の専門は人工知能である．
 	sn.addLink(new Link("speciality","Daisuke","AI",sn));
->>>>>>> Stashed changes
 	
 	// エロゲはゲームである．
 	sn.addLink(new Link("is-a","Hentai-Game","Game",sn));
@@ -46,7 +41,7 @@ public class Daisuke {
 	sn.addLink(new Link("friend","Daisuke","Koudai",sn));
 	
 	//大輔は涼太の友達である。
-	sn.addLink(new Link("friend","Daisuke","Ryouta",sn));
+	sn.addLink(new Link("friend","Daisuke","Ryota",sn));
 	
 	//大輔は知道の友達である。
 	sn.addLink(new Link("friend","Daisuke","Tomomiti",sn));
@@ -63,7 +58,6 @@ public class Daisuke {
 	query.add(new Link("is-a","?y","student"));
 	query.add(new Link("hobby","?y","Hentai-Game"));
 	sn.query(query);
-	    System.out.print("aaa");
     }    
 }
 
