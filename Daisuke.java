@@ -48,7 +48,7 @@ public class Daisuke {
 	
 	//大輔は健太の友達である。
 	sn.addLink(new Link("friend","Daisuke","Kenta",sn));
-	//test
+	    
 		
 	sn.printLinks();
 	sn.printNodes();
