@@ -1,52 +1,53 @@
 import java.util.*;
 
 /***
- * Semantic Net の使用例
+ * Semantic Net 縺ｮ菴ｿ逕ｨ萓�
  */
 public class Daisuke {
     public static void main(String args[]){
 	SemanticNet sn = new SemanticNet();
 
-	// 大輔は男性である．
+	//僕のPCで開いたら文字化けしてた
+	// 螟ｧ霈斐�ｯ逕ｷ諤ｧ縺ｧ縺ゅｋ�ｼ�
 	sn.addLink(new Link("is-a","Daisuke","man",sn));
 	
-	// 男性は人間である．
+	// 逕ｷ諤ｧ縺ｯ莠ｺ髢薙〒縺ゅｋ�ｼ�
 		sn.addLink(new Link("is-a","man","human",sn));
 
-	// 大輔は名古屋工業大学の学生である．
+	// 螟ｧ霈斐�ｯ蜷榊商螻句ｷ･讌ｭ螟ｧ蟄ｦ縺ｮ蟄ｦ逕溘〒縺ゅｋ�ｼ�
 	sn.addLink(new Link("is-a","Daisuke","NIT-student",sn));
 
-	// 大輔の専門は人工知能である．
+	// 螟ｧ霈斐�ｮ蟆る摩縺ｯ莠ｺ蟾･遏･閭ｽ縺ｧ縺ゅｋ�ｼ�
 	sn.addLink(new Link("speciality","Daisuke","AI",sn));
 	
-	// エロゲはゲームである．
+	// 繧ｨ繝ｭ繧ｲ縺ｯ繧ｲ繝ｼ繝�縺ｧ縺ゅｋ�ｼ�
 	sn.addLink(new Link("is-a","Hentai-Game","Game",sn));
 
-	// 人間は知性を持つ．
+	// 莠ｺ髢薙�ｯ遏･諤ｧ繧呈戟縺､�ｼ�
 	sn.addLink(new Link("has-a","human","intelligence",sn));
 	
-	// 大輔の趣味はエロゲである．
+	// 螟ｧ霈斐�ｮ雜｣蜻ｳ縺ｯ繧ｨ繝ｭ繧ｲ縺ｧ縺ゅｋ�ｼ�
 	sn.addLink(new Link("hobby","Daisuke","Hentai-Game",sn));
 	
-	// 大輔はエロゲを所有する．
+	// 螟ｧ霈斐�ｯ繧ｨ繝ｭ繧ｲ繧呈園譛峨☆繧具ｼ�
 	sn.addLink(new Link("own","Daisuke","Hentai-Game",sn));
 
-	// 名古屋工業大学の学生は，学生である．
+	// 蜷榊商螻句ｷ･讌ｭ螟ｧ蟄ｦ縺ｮ蟄ｦ逕溘�ｯ�ｼ悟ｭｦ逕溘〒縺ゅｋ�ｼ�
 	sn.addLink(new Link("is-a","NIT-student","student",sn));
 
-	// 学生は勉強しない．
+	// 蟄ｦ逕溘�ｯ蜍牙ｼｷ縺励↑縺�ｼ�
 	sn.addLink(new Link("donot","student","study",sn));
 	
-	//大輔は広大の友達である。
+	//螟ｧ霈斐�ｯ蠎�螟ｧ縺ｮ蜿矩＃縺ｧ縺ゅｋ縲�
 	sn.addLink(new Link("friend","Daisuke","Koudai",sn));
 	
-	//大輔は涼太の友達である。
+	//螟ｧ霈斐�ｯ豸ｼ螟ｪ縺ｮ蜿矩＃縺ｧ縺ゅｋ縲�
 	sn.addLink(new Link("friend","Daisuke","Ryota",sn));
 	
-	//大輔は知道の友達である。
+	//螟ｧ霈斐�ｯ遏･驕薙�ｮ蜿矩＃縺ｧ縺ゅｋ縲�
 	sn.addLink(new Link("friend","Daisuke","Tomomiti",sn));
 	
-	//大輔は健太の友達である。
+	//螟ｧ霈斐�ｯ蛛･螟ｪ縺ｮ蜿矩＃縺ｧ縺ゅｋ縲�
 	sn.addLink(new Link("friend","Daisuke","Kenta",sn));
 	    
 		
