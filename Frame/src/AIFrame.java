@@ -209,7 +209,7 @@ Iterator readSlotValuesWithWhenRequestedProc(
    if ( obj != null )
     return obj;
    //追加内容
-   if(frame.getSupers().hasNext() != true)
+   if(frame.getSupers() != null && frame.getSupers().hasNext()== true)
 	   supers = frame.getSupers(); //superの更新
    //ここまで
   }
