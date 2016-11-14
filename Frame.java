@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /*
  Example.java
@@ -11,6 +12,7 @@ import java.util.HashMap;
 
 public class Frame {
 	static AIFrameSystem fs; 
+	ArrayList<String>slotlist;
 
 	public static void main(String args[]) {
 		System.out.println( "Frame" );
@@ -40,10 +42,10 @@ public class Frame {
 
 		//Daisukeのスロットにデータを書く
 		fs.writeSlotValue( "Daisuke", "height", new String( "172" ) );
-		fs.writeSlotValue( "Kenta", "height", new Integer( 168 ) );
-		fs.writeSlotValue( "Ryota", "height", new Integer( 172 ) );
-		fs.writeSlotValue( "Kodai", "height", new Integer( 165 ) );
-		fs.writeSlotValue( "Tomomichi", "height", new Integer( 182 ) );
+		fs.writeSlotValue( "Kenta", "height", new String( "168" ) );
+		fs.writeSlotValue( "Ryota", "height", new String( "172" ) );
+		fs.writeSlotValue( "Kodai", "height", new String( "165" ) );
+		fs.writeSlotValue( "Tomomichi", "height", new String( "182" ) );
 
 		fs.writeSlotValue( "Daisuke", "task", new String( "5-2" ) );
 		fs.writeSlotValue( "Kenta", "task", new String( "5-3" ) );
@@ -76,6 +78,23 @@ public class Frame {
 
 
 	void query(String[] string){
+		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
+		temp =  fs.solution();
+		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
+		slotlist = new ArrayList<String>();
+		for(int i=0;i<keylist.size();i++){
+			AIFrame frame = (AIFrame)temp.get(keylist.get(i));			
+			ArrayList<String>slot = new ArrayList<String>();
+			Iterator supers = frame.getSupers();
+			while(supers != null && supers.hasNext() == true){
+				frame = (AIFrame) supers.next();
+				slot = frame.solution();
+				for(int j=0;j<slot.size();j++){
+					if(!slotlist.contains(slot.get(j))) slotlist.add(slot.get(j));
+				}
+				supers = frame.getSupers(); 
+			}
+		}
 		if( var(string[0]) &&  var(string[2])) varquery3(string);
 		else if( var(string[0]) && !var(string[2])) varquery1(string);
 		else if(!var(string[0]) &&  var(string[2])) varquery2(string);
@@ -89,18 +108,17 @@ public class Frame {
 		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
 		temp =  fs.solution();
 		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
-		for(int i=1;i<keylist.size()-2;i++){
-			AIFrame frame = (AIFrame)temp.get(keylist.get(i));
-			ArrayList<String>slotlist = new ArrayList<String>();
-			slotlist = frame.solution();
-			//if(slotlist.contains(string[1])){
-				if(fs.readSlotValue(keylist.get(i), string[1],false).equals(string[2])){
-					System.out.println(keylist.get(i)+" "+string[1]+" "+string[2]);
+		if(slotlist.contains(string[1])){
+			for(int i=0;i<keylist.size();i++){
+				if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
+					if(fs.readSlotValue(keylist.get(i), string[1],false).equals(string[2])){
+						System.out.println(keylist.get(i)+" "+string[1]+" "+string[2]);
+					}
 				}
-			//}else{
-			//	System.out.println("けんぴはDQN");
-			//	return;
-			//}
+			}
+		}else{
+			System.out.println("けんぴはDQN");
+			return;
 		}
 	}
 
@@ -108,34 +126,34 @@ public class Frame {
 		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
 		temp =  fs.solution();
 		AIFrame frame = (AIFrame)temp.get(string[0]);
-		ArrayList<String>slotlist = new ArrayList<String>();
-		slotlist = frame.solution();
-		//if(slotlist.contains(string[1])){
+		if(slotlist.contains(string[1])){
 			System.out.println(string[0]+" "+string[1]+" "+fs.readSlotValue(string[0], string[1],false));
-		//}else{
-		//	System.out.println("けんぴはDQN");
-		//	return;
-		//}
+		}else{
+			System.out.println("けんぴはDQN");
+			return;
+		}
 	}
 
 	void varquery3(String[] string){
 		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
 		temp =  fs.solution();
 		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
-		for(int i=0;i<keylist.size();i++){
-			AIFrame frame = (AIFrame)temp.get(keylist.get(i));
-			ArrayList<String>slotlist = new ArrayList<String>();
-			slotlist = frame.solution();
-			//if(slotlist.contains(string[1])){
-				for(int j=1;j<slotlist.size();j++){
-					if(slotlist.get(j).equals(string[1])){
-						System.out.println(keylist.get(i)+" "+string[1]+" "+fs.readSlotValue(keylist.get(i), string[1],false));
+		if(slotlist.contains(string[1])){
+			for(int i=0;i<keylist.size();i++){
+				if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
+					AIFrame frame = (AIFrame)temp.get(keylist.get(i));
+					ArrayList<String>slot = new ArrayList<String>();
+					slot = frame.solution();
+					for(int j=0;j<slot.size();j++){
+						if(slot.get(j).equals(string[1])){
+							System.out.println(keylist.get(i)+" "+string[1]+" "+fs.readSlotValue(keylist.get(i), string[1],false));
+						}
 					}
 				}
-			//}else{
-			//	System.out.println("けんぴはDQN");
-			//	return;
-			//}
+			}
+		}else{
+			System.out.println("けんぴはDQN");
+			return;
 		}
 	}
 
