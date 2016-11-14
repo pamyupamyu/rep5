@@ -81,10 +81,7 @@ public static void delete_text(){
 	    }
 }
 
-public static String[] template(String args[]){
-	//Who is a students
 
-}
 
 	   public static void main(String args[]){
 			SemanticNet sn = new SemanticNet();
