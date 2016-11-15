@@ -29,24 +29,24 @@ public class Kenta {
 	sn.addLink(new Link("is-a","NIT-student","student",sn));
 
 	//　健太はりょうたの友達である
-	sn.addLink(new Link("is-a","Kenta","Ryota",sn));
+	sn.addLink(new Link("friends","Kenta","Ryota",sn));
 	
 	// 健太は広大の友達である
-	sn.addLink(new Link("is-a","Kenta","Koudai",sn));
+	sn.addLink(new Link("friends","Kenta","Koudai",sn));
 	
 	 // 健太は知道の友達である
-	sn.addLink(new Link("is-a","Kenta","Tomomichi",sn));
+	sn.addLink(new Link("friends","Kenta","Tomomichi",sn));
 
 	// 健太は大輔の友達である
-	sn.addLink(new Link("is-a","Kenta","Daisuke",sn));
+	sn.addLink(new Link("friends","Kenta","Daisuke",sn));
 	
 
 	sn.printLinks();
 	sn.printNodes();
 
 	ArrayList<Link> query = new ArrayList<Link>();
-	query.add(new Link("is-a","?y","student"));
-	query.add(new Link("hobby","?y","tennis"));
+	query.add(new Link("is-a","tennis","?y"));
+	query.add(new Link("hobby","Kenta","?y"));
 	sn.query(query);
     }    
 }
