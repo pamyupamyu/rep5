@@ -67,6 +67,7 @@ public class Frame {
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 				String s = br.readLine();
 				String[] data = s.split(" ",0);
+				//exit入力で終了
 				if(data[0].equals("exit")) System.exit(0);
 				new Frame().query(data);
 			}
@@ -76,11 +77,15 @@ public class Frame {
 
 	}
 
-
+	/**
+	 * queryを行い結果を表示する
+	 * @param string
+	 */
 	void query(String[] string){
 		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
 		temp =  fs.solution();
 		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
+		//入力される可能性のあるスロット名をslotlistに保存
 		slotlist = new ArrayList<String>();
 		for(int i=0;i<keylist.size();i++){
 			AIFrame frame = (AIFrame)temp.get(keylist.get(i));			
@@ -95,90 +100,93 @@ public class Frame {
 				supers = frame.getSupers(); 
 			}
 		}
-		if( var(string[0]) &&  var(string[2])) varquery3(string);
-		else if( var(string[0]) && !var(string[2])) varquery1(string);
-		else if(!var(string[0]) &&  var(string[2])) varquery2(string);
-		else{
-			System.out.println(kenpiDQN(string));
+		//条件分岐してquery
+		if(slotlist.contains(string[1])){
+			if( var(string[0]) &&  var(string[2])) varquery3(string);
+			else if( var(string[0]) && !var(string[2])) varquery1(string);
+			else if(!var(string[0]) &&  var(string[2])) varquery2(string);
+			else{
+				System.out.println(matching(string));
+				return;
+			}
+		}else{
+			System.out.println("けんぴはDQN");
 			return;
 		}
 	}
 
+	/**
+	 * フレーム名を変数で渡された場合にmatchingするフレーム名を表示する
+	 * 
+	 */
 	void varquery1(String[] string){
 		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
 		temp =  fs.solution();
 		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
-		if(slotlist.contains(string[1])){
-			for(int i=0;i<keylist.size();i++){
-				if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
-					if(fs.readSlotValue(keylist.get(i), string[1],false).equals(string[2])){
-						System.out.println(keylist.get(i)+" "+string[1]+" "+string[2]);
-					}
+		for(int i=0;i<keylist.size();i++){
+			if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
+				if(fs.readSlotValue(keylist.get(i), string[1],false).equals(string[2])){
+					System.out.println(keylist.get(i)+" "+string[1]+" "+string[2]);
 				}
 			}
-		}else{
-			System.out.println("けんぴはDQN");
-			return;
 		}
 	}
-
+	
+	/**
+	 * スロット値を変数として渡された場合にmatchingするフレーム値を表示する
+	 * @param string
+	 */
 	void varquery2(String[] string){
 		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
 		temp =  fs.solution();
 		AIFrame frame = (AIFrame)temp.get(string[0]);
-		if(slotlist.contains(string[1])){
-			System.out.println(string[0]+" "+string[1]+" "+fs.readSlotValue(string[0], string[1],false));
-		}else{
-			System.out.println("けんぴはDQN");
-			return;
-		}
+		System.out.println(string[0]+" "+string[1]+" "+fs.readSlotValue(string[0], string[1],false));
 	}
-
+	
+	/**
+	 * フレーム名とスロット値を変数として渡された場合にmatchingするフレーム名とスロット値を表示する
+	 * @param string
+	 */
 	void varquery3(String[] string){
 		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
 		temp =  fs.solution();
 		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
-		if(slotlist.contains(string[1])){
-			for(int i=0;i<keylist.size();i++){
-				if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
-					AIFrame frame = (AIFrame)temp.get(keylist.get(i));
-					ArrayList<String>slot = new ArrayList<String>();
-					slot = frame.solution();
-					for(int j=0;j<slot.size();j++){
-						if(slot.get(j).equals(string[1])){
-							System.out.println(keylist.get(i)+" "+string[1]+" "+fs.readSlotValue(keylist.get(i), string[1],false));
-						}
+		for(int i=0;i<keylist.size();i++){
+			if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
+				AIFrame frame = (AIFrame)temp.get(keylist.get(i));
+				ArrayList<String>slot = new ArrayList<String>();
+				slot = frame.solution();
+				for(int j=0;j<slot.size();j++){
+					if(slot.get(j).equals(string[1])){
+						System.out.println(keylist.get(i)+" "+string[1]+" "+fs.readSlotValue(keylist.get(i), string[1],false));
 					}
 				}
 			}
-		}else{
-			System.out.println("けんぴはDQN");
-			return;
 		}
 	}
 
-	boolean var(String str1){
-		// 先頭が ? なら変数
-		return str1.startsWith("?");
-	}
-	
-	boolean kenpiDQN(String[] string){
+	/**
+	 * 変数が含まれていない文を渡された場合に正しい文かを返す
+	 * @param string
+	 * @return
+	 */
+	boolean matching(String[] string){
 		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
 		temp =  fs.solution();
 		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
-		if(slotlist.contains(string[1])){
-			for(int i=0;i<keylist.size();i++){
-				if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
-					if(keylist.get(i).equals(string[0]) && fs.readSlotValue(keylist.get(i),string[1],false).equals(string[2])){
-						return true;
-					}
+		for(int i=0;i<keylist.size();i++){
+			if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
+				if(keylist.get(i).equals(string[0]) && fs.readSlotValue(keylist.get(i),string[1],false).equals(string[2])){
+					return true;
 				}
 			}
-			return false;
-		}else{
-			System.out.println("けんぴはDQN");
-			return false;
 		}
+		return false;
+	}
+	
+	boolean var(String str1){
+		// 先頭が ? なら変数
+		return str1.startsWith("?");
 	}
 
 
