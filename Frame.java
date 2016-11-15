@@ -99,7 +99,7 @@ public class Frame {
 		else if( var(string[0]) && !var(string[2])) varquery1(string);
 		else if(!var(string[0]) &&  var(string[2])) varquery2(string);
 		else{
-			System.out.println("けんぴはDQN");
+			System.out.println(kenpiDQN(string));
 			return;
 		}
 	}
@@ -160,6 +160,25 @@ public class Frame {
 	boolean var(String str1){
 		// 先頭が ? なら変数
 		return str1.startsWith("?");
+	}
+	
+	boolean kenpiDQN(String[] string){
+		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
+		temp =  fs.solution();
+		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
+		if(slotlist.contains(string[1])){
+			for(int i=0;i<keylist.size();i++){
+				if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
+					if(keylist.get(i).equals(string[0]) && fs.readSlotValue(keylist.get(i),string[1],false).equals(string[2])){
+						return true;
+					}
+				}
+			}
+			return false;
+		}else{
+			System.out.println("けんぴはDQN");
+			return false;
+		}
 	}
 
 
