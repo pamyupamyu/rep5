@@ -1,193 +1,385 @@
 import java.io.BufferedReader;
+
 import java.io.IOException;
+
 import java.io.InputStreamReader;
+
 import java.util.ArrayList;
+
 import java.util.HashMap;
+
 import java.util.Iterator;
 
+
+
 /*
+
  Example.java
+
+
 
  */
 
+
+
 public class Frame {
+
 	static AIFrameSystem fs; 
+
 	ArrayList<String>slotlist;
 
+
+
 	public static void main(String args[]) {
+
 		System.out.println( "Frame" );
 
-		// ãƒ•ãƒ¬ãƒ¼ãƒ ã‚·ã‚¹ãƒ†ãƒ ã®åˆæœŸåŒ–
+
+
+		// ƒtƒŒ[ƒ€ƒVƒXƒeƒ€‚Ì‰Šú‰»
+
 		//AIFrameSystem fs = new AIFrameSystem();
+
 		fs = new AIFrameSystem();
 
-		// ã‚¯ãƒ©ã‚¹ãƒ•ãƒ¬ãƒ¼ãƒ  human ã®ç”Ÿæˆ
+
+
+		// ƒNƒ‰ƒXƒtƒŒ[ƒ€ human ‚Ì¶¬
+
 		fs.createClassFrame( "human" );
-		// height ã‚¹ãƒ­ãƒƒãƒˆã‚’è¨­å®š
+
+		// height ƒXƒƒbƒg‚ğİ’è
+
 		fs.writeSlotValue( "human", "height", new String( "160" ) );
-		// height ã‹ã‚‰ weight ã‚’è¨ˆç®—ã™ã‚‹ãŸã‚ã®å¼ weight = 0.9*(height-100) ã‚’
-		// when-requested demon ã¨ã—ã¦ weight ã‚¹ãƒ­ãƒƒãƒˆã«å‰²ã‚Šå½“ã¦ã‚‹  
+
+		// height ‚©‚ç weight ‚ğŒvZ‚·‚é‚½‚ß‚Ì® weight = 0.9*(height-100) ‚ğ
+
+		// when-requested demon ‚Æ‚µ‚Ä weight ƒXƒƒbƒg‚ÉŠ„‚è“–‚Ä‚é  
+
 		fs.setWhenRequestedProc( "human", "weight", new AIDemonProcReadTest() );
 
-		//memberã¨ã„ã†ã‚¯ãƒ©ã‚¹ãƒ•ãƒ¬ãƒ¼ãƒ ä½œæˆ
+
+
+		//member‚Æ‚¢‚¤ƒNƒ‰ƒXƒtƒŒ[ƒ€ì¬
+
 		fs.createClassFrame( "human" , "member" );
 
-		//å„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’memberãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ä½œæˆ
+
+
+		//ŠeƒCƒ“ƒXƒ^ƒ“ƒXƒtƒŒ[ƒ€‚ğmemberƒtƒŒ[ƒ€‚©‚çì¬
+
 		fs.writeSlotValue( "member", "task", new String( "no job" ) );
+
 		fs.createInstanceFrame( "member", "Daisuke" );
+
 		fs.createInstanceFrame( "member", "Kenta" );
+
 		fs.createInstanceFrame( "member", "Ryota" );
+
 		fs.createInstanceFrame( "member", "Kodai" );
+
 		fs.createInstanceFrame( "member", "Tomomichi" );
 
-		//Daisukeã®ã‚¹ãƒ­ãƒƒãƒˆã«ãƒ‡ãƒ¼ã‚¿ã‚’æ›¸ã
+
+
+		//Daisuke‚ÌƒXƒƒbƒg‚Éƒf[ƒ^‚ğ‘‚­
+
 		fs.writeSlotValue( "Daisuke", "height", new String( "172" ) );
+
 		fs.writeSlotValue( "Kenta", "height", new String( "168" ) );
+
 		fs.writeSlotValue( "Ryota", "height", new String( "172" ) );
+
 		fs.writeSlotValue( "Kodai", "height", new String( "165" ) );
+
 		fs.writeSlotValue( "Tomomichi", "height", new String( "182" ) );
 
+
+
 		fs.writeSlotValue( "Daisuke", "task", new String( "5-2" ) );
-		fs.writeSlotValue( "Kenta", "task", new String( "5-3" ) );
-		fs.writeSlotValue( "Ryota", "task", new String( "5-4" ) );
+
+		fs.writeSlotValue( "Kenta", "task", new String( "5-4" ) );
+
+		fs.writeSlotValue( "Ryota", "task", new String( "5-3" ) );
+
 		fs.writeSlotValue( "Kodai", "task", new String( "5-3" ) );
+
 		fs.writeSlotValue( "Tomomichi", "task", new String( "5-1" ) );
 
-		//Daisukeã®ã‚¹ãƒ­ãƒƒãƒˆã®ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã‚€
+
+
+		//Daisuke‚ÌƒXƒƒbƒg‚Ìƒf[ƒ^‚ğ“Ç‚Ş
+
 		System.out.println("Daisuke" +  "'s height is " + fs.readSlotValue( "Daisuke", "height", false ) );
+
 		System.out.println("Daisuke's weight is " + fs.readSlotValue( "Daisuke", "weight", false ) );
+
 		System.out.println("Daisuke's task is " + fs.readSlotValue( "Daisuke", "task", false ) );
 
 
+
+
+
 		//query
-		System.out.println("ã‚³ãƒãƒ³ãƒ‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„");
+
+		System.out.println("ƒRƒ}ƒ“ƒh‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢");
+
 		try{
+
 			while(true){
-				System.out.println("Frameåã¨Slotåå…¥åŠ›(ç©ºç™½åŒºåˆ‡ã‚Š),çµ‚äº†:exit");
+
+				System.out.println("Frame–¼‚ÆSlot–¼“ü—Í(‹ó”’‹æØ‚è),I—¹:exit");
+
 				BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
 				String s = br.readLine();
+
 				String[] data = s.split(" ",0);
-				//exitå…¥åŠ›ã§çµ‚äº†
+
+				//exit“ü—Í‚ÅI—¹
+
 				if(data[0].equals("exit")) System.exit(0);
+
 				new Frame().query(data);
+
 			}
+
 		}catch(IOException e){
+
 			System.out.println("Exception :" + e);
+
 		}
+
+
 
 	}
 
+
+
 	/**
-	 * queryã‚’è¡Œã„çµæœã‚’è¡¨ç¤ºã™ã‚‹
+
+	 * query‚ğs‚¢Œ‹‰Ê‚ğ•\¦‚·‚é
+
 	 * @param string
+
 	 */
+
 	void query(String[] string){
+
 		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
+
 		temp =  fs.solution();
+
 		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
-		//å…¥åŠ›ã•ã‚Œã‚‹å¯èƒ½æ€§ã®ã‚ã‚‹ã‚¹ãƒ­ãƒƒãƒˆåã‚’slotlistã«ä¿å­˜
+
+		//“ü—Í‚³‚ê‚é‰Â”\«‚Ì‚ ‚éƒXƒƒbƒg–¼‚ğslotlist‚É•Û‘¶
+
 		slotlist = new ArrayList<String>();
+
 		for(int i=0;i<keylist.size();i++){
+
 			AIFrame frame = (AIFrame)temp.get(keylist.get(i));			
+
 			ArrayList<String>slot = new ArrayList<String>();
+
 			Iterator supers = frame.getSupers();
+
 			while(supers != null && supers.hasNext() == true){
+
 				frame = (AIFrame) supers.next();
+
 				slot = frame.solution();
+
 				for(int j=0;j<slot.size();j++){
+
 					if(!slotlist.contains(slot.get(j))) slotlist.add(slot.get(j));
+
 				}
+
 				supers = frame.getSupers(); 
+
 			}
+
 		}
-		//æ¡ä»¶åˆ†å²ã—ã¦query
+
+		//ğŒ•ªŠò‚µ‚Äquery
+
 		if(slotlist.contains(string[1])){
+
 			if( var(string[0]) &&  var(string[2])) varquery3(string);
+
 			else if( var(string[0]) && !var(string[2])) varquery1(string);
+
 			else if(!var(string[0]) &&  var(string[2])) varquery2(string);
+
 			else{
+
 				System.out.println(matching(string));
+
 				return;
+
 			}
+
 		}else{
-			System.out.println("ã‘ã‚“ã´ã¯DQN");
+
+			System.out.println("error");
+
 			return;
+
 		}
+
 	}
 
+
+
 	/**
-	 * ãƒ•ãƒ¬ãƒ¼ãƒ åã‚’å¤‰æ•°ã§æ¸¡ã•ã‚ŒãŸå ´åˆã«matchingã™ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ åã‚’è¡¨ç¤ºã™ã‚‹
+
+	 * ƒtƒŒ[ƒ€–¼‚ğ•Ï”‚Å“n‚³‚ê‚½ê‡‚Ématching‚·‚éƒtƒŒ[ƒ€–¼‚ğ•\¦‚·‚é
+
 	 * 
+
 	 */
+
 	void varquery1(String[] string){
+
 		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
+
 		temp =  fs.solution();
+
 		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
+
 		for(int i=0;i<keylist.size();i++){
+
 			if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
+
 				if(fs.readSlotValue(keylist.get(i), string[1],false).equals(string[2])){
+
 					System.out.println(keylist.get(i)+" "+string[1]+" "+string[2]);
+
 				}
+
 			}
+
 		}
-	}
-	
-	/**
-	 * ã‚¹ãƒ­ãƒƒãƒˆå€¤ã‚’å¤‰æ•°ã¨ã—ã¦æ¸¡ã•ã‚ŒãŸå ´åˆã«matchingã™ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ å€¤ã‚’è¡¨ç¤ºã™ã‚‹
-	 * @param string
-	 */
-	void varquery2(String[] string){
-		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
-		temp =  fs.solution();
-		AIFrame frame = (AIFrame)temp.get(string[0]);
-		System.out.println(string[0]+" "+string[1]+" "+fs.readSlotValue(string[0], string[1],false));
-	}
-	
-	/**
-	 * ãƒ•ãƒ¬ãƒ¼ãƒ åã¨ã‚¹ãƒ­ãƒƒãƒˆå€¤ã‚’å¤‰æ•°ã¨ã—ã¦æ¸¡ã•ã‚ŒãŸå ´åˆã«matchingã™ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ åã¨ã‚¹ãƒ­ãƒƒãƒˆå€¤ã‚’è¡¨ç¤ºã™ã‚‹
-	 * @param string
-	 */
-	void varquery3(String[] string){
-		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
-		temp =  fs.solution();
-		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
-		for(int i=0;i<keylist.size();i++){
-			if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
-				AIFrame frame = (AIFrame)temp.get(keylist.get(i));
-				ArrayList<String>slot = new ArrayList<String>();
-				slot = frame.solution();
-				for(int j=0;j<slot.size();j++){
-					if(slot.get(j).equals(string[1])){
-						System.out.println(keylist.get(i)+" "+string[1]+" "+fs.readSlotValue(keylist.get(i), string[1],false));
-					}
-				}
-			}
-		}
+
 	}
 
-	/**
-	 * å¤‰æ•°ãŒå«ã¾ã‚Œã¦ã„ãªã„æ–‡ã‚’æ¸¡ã•ã‚ŒãŸå ´åˆã«æ­£ã—ã„æ–‡ã‹ã‚’è¿”ã™
-	 * @param string
-	 * @return
-	 */
-	boolean matching(String[] string){
-		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
-		temp =  fs.solution();
-		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
-		for(int i=0;i<keylist.size();i++){
-			if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
-				if(keylist.get(i).equals(string[0]) && fs.readSlotValue(keylist.get(i),string[1],false).equals(string[2])){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 	
-	boolean var(String str1){
-		// å…ˆé ­ãŒ ? ãªã‚‰å¤‰æ•°
-		return str1.startsWith("?");
+
+	/**
+
+	 * ƒXƒƒbƒg’l‚ğ•Ï”‚Æ‚µ‚Ä“n‚³‚ê‚½ê‡‚Ématching‚·‚éƒtƒŒ[ƒ€’l‚ğ•\¦‚·‚é
+
+	 * @param string
+
+	 */
+
+	void varquery2(String[] string){
+
+		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
+
+		temp =  fs.solution();
+
+		AIFrame frame = (AIFrame)temp.get(string[0]);
+
+		System.out.println(string[0]+" "+string[1]+" "+fs.readSlotValue(string[0], string[1],false));
+
 	}
+
+	
+
+	/**
+
+	 * ƒtƒŒ[ƒ€–¼‚ÆƒXƒƒbƒg’l‚ğ•Ï”‚Æ‚µ‚Ä“n‚³‚ê‚½ê‡‚Ématching‚·‚éƒtƒŒ[ƒ€–¼‚ÆƒXƒƒbƒg’l‚ğ•\¦‚·‚é
+
+	 * @param string
+
+	 */
+
+	void varquery3(String[] string){
+
+		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
+
+		temp =  fs.solution();
+
+		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
+
+		for(int i=0;i<keylist.size();i++){
+
+			if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
+
+				AIFrame frame = (AIFrame)temp.get(keylist.get(i));
+
+				ArrayList<String>slot = new ArrayList<String>();
+
+				slot = frame.solution();
+
+				for(int j=0;j<slot.size();j++){
+
+					if(slot.get(j).equals(string[1])){
+
+						System.out.println(keylist.get(i)+" "+string[1]+" "+fs.readSlotValue(keylist.get(i), string[1],false));
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+
+
+	/**
+
+	 * •Ï”‚ªŠÜ‚Ü‚ê‚Ä‚¢‚È‚¢•¶‚ğ“n‚³‚ê‚½ê‡‚É³‚µ‚¢•¶‚©‚ğ•Ô‚·
+
+	 * @param string
+
+	 * @return
+
+	 */
+
+	boolean matching(String[] string){
+
+		HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
+
+		temp =  fs.solution();
+
+		ArrayList<String> keylist = new ArrayList<String>(temp.keySet());
+
+		for(int i=0;i<keylist.size();i++){
+
+			if(!keylist.get(i).equals("top_level_frame") && fs.readSlotValue(keylist.get(i), string[1],false) != null){
+
+				if(keylist.get(i).equals(string[0]) && fs.readSlotValue(keylist.get(i),string[1],false).equals(string[2])){
+
+					return true;
+
+				}
+
+			}
+
+		}
+
+		return false;
+
+	}
+
+	
+
+	boolean var(String str1){
+
+		// æ“ª‚ª ? ‚È‚ç•Ï”
+
+		return str1.startsWith("?");
+
+	}
+
+
+
 
 
 }
