@@ -93,7 +93,7 @@ public class Frame {
 					if(s.indexOf("体重") != -1){
 						data[1] = "weight";
 						int index = s.indexOf("体重") + "体重".length();
-						if((s.length() - s.substring(0,index).length()) > 4){//「体重」の後に2文字続いているか
+						if((s.length() - s.substring(0,index).length()) > 1){//「体重」の後に2文字続いているか
 						data[2] = s.substring(index, index +2);
 						if(!isNumber(data[2]))data[2] = "?体重";//体重の後ろの文字が2ケタの数字でないなら
 						}else data[2] = "?体重";
@@ -102,7 +102,7 @@ public class Frame {
 					if(s.indexOf("身長") != -1){
 						data[1] = "height";
 						int index = s.indexOf("身長") + "身長".length();
-						if((s.length() - s.substring(0,index).length()) > 5){//「身長」の後に3文字続いているか
+						if((s.length() - s.substring(0,index).length()) > 2){//「身長」の後に3文字続いているか
 							data[2] = s.substring(index, index +3);
 							if(!isNumber(data[2]))data[2] = "?身長";//身長の後ろの文字が2ケタの数字でないなら
 						}else data[2] = "?身長";
@@ -111,7 +111,7 @@ public class Frame {
 					if(s.indexOf("課題") != -1 || s.indexOf("担当") != -1){
 						data[1] = "task";
 						int index = s.indexOf("課題") + "課題".length();
-						if((s.length() - s.substring(0,index).length()) > 5){//「課題」の後に3文字続いているか
+						if((s.length() - s.substring(0,index).length()) > 2){//「課題」の後に3文字続いているか
 							data[2] = s.substring(index, index +3);
 							if(!isNumber(data[2].substring(0,1)) || !isNumber(data[2].substring(3-1)))data[2] = "?課題";////課題の後ろの文字が○-○でないなら
 						}else data[2] = "?課題";
