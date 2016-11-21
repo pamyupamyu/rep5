@@ -67,7 +67,9 @@ public class Frame {
 					BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 					String s = br.readLine();
 					if(s.indexOf("exit") != -1) System.exit(0);
-					if(s.indexOf("query") != -1) n_or_q = true;	//モードの切り替え
+					if(s.indexOf("query") != -1){
+						n_or_q = true;	//モードの切り替え
+					}else{
 					String[] data = {"","",""};
 					//フレーム名の確保
 					HashMap<String,AIFrame>temp = new HashMap<String,AIFrame>();
@@ -115,6 +117,7 @@ public class Frame {
 						}else data[2] = "?課題";
 					}
 					new Frame().query(data);
+					}
 				}
 			}
 		}catch(IOException e){
