@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+
+  <!--
+   デフォルトのスタイル
+   より見やすく変更しても良い
+  -->
+  <link rel="stylesheet" href="default.css"/>
+
+  <!--
+    SyntaxHighlighter 3.0.83 (http://alexgorbatchev.com/SyntaxHighlighter/)
+    Java のコードを読みやすくする
+  -->
+  <link rel="stylesheet" href="shCore.css"/>
+  <link rel="stylesheet" href="shThemeDjango.css"/>
+  <script src="shCore.js"></script>
+  <script src="shBrushJava.js"></script>
+  <script>SyntaxHighlighter.all();</script>
+
+  <!--
+    目次を動的に生成する
+  -->
+  <script src="outliner.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      // 第一引数: アウトライン対象の要素のセレクタ，第二引数: アウトラインを格納する要素のセレクタ．
+      new TOutliner('h2', '#outline');
+    });
+  </script>
+
+  <title>知能プログラミング演習IIグループ作成 Grep5</title>
+</head>
+
+<!-- このグループ作成資料は，同じファイルを全員のGrepX（Grep5やGrep6等）ディレクトリにコピーして置くこと -->
+
+<body>
+<header>
+  <!-- グループ番号を書く．-->
+  <h1>グループ1</h1>
+
+  <!-- 目次生成用 -->
+  <nav id="outline"></nav>
+</header>
+
+<!-- グループ全員の名前, 学籍番号を書き，個人作成書類へのリンクを張る -->
+<h2>メンバー</h2>
+<ul>
+<li><a href="../../../../ckb15068/share/rep5/index.html">島野広大 26115068 </a>
+<li><a href="../../../../ckb15069/share/rep5/index.html">清水涼太 26115069 </a>
+<li><a href="../../../../ckb15070/share/rep5/index.html">新海知道 26115070 </a>
+<li><a href="../../../../ckb15073/share/rep5/index.html">椙田大輔 26115073 </a>
+<li><a href="../../../../ckb15074/share/rep5/index.html">鈴木健太 26115074 </a>
+</ul>
+
+<h2>役割分担</h2>
+<!-- 役割分担を書く．-->
+<ul>
+<li>島野広大: 課題5-1,5-2個人部分、課題5-3 実装担当
+<li>清水涼太: 課題5-1,5-2個人部分、課題5-3 実装担当
+<li>新海知道: 課題5-1,5-2個人部分、 実装担当(テキストファイルからセマンティックネットを読み込むetc)
+<li>椙田大輔: 課題5ｰ1,5-2個人部分、課題5-2 実装担当(継承機能修復)
+<li>鈴木健太: 課題5ｰ1,5-2個人部分、課題5-4 考察担当,グループ作成書類担当
+</ul>
+
+<h2>ソースファイル</h2>
+<ul>
+  <li><a href="../../workspace/SemanticNet/src/Kenta.java">Kenta.java</a>
+  <li><a href="../../workspace/SemanticNet/src/Link.java">Link.java</a>
+  <li><a href="../../workspace/SemanticNet/src/Node.java">Node.java</a>
+  <li><a href="../../workspace/SemanticNet/src/Kenta.java">SemanticNet.java</a>
+  <li><a href="../../workspace/Frame/src/AIClassFrame.java">AIClassFrame.java</a>
+  <li><a href="../../workspace/Frame/src/AIDemonProc.java">AIDemonProc.java</a>
+  <li><a href="../../workspace/Frame/src/AIDemonProcReadTest.java">AIDemonProcReadTest.java</a>
+
+  <li><a href="../../workspace/Frame/src/AIDemonProcWriteTest.java">AIDemonProcWriteTest.java</a>
+  <li><a href="../../workspace/Frame/src/AIFrame.java">AIFrame.java</a>
+ <li><a href="../../workspace/Frame/src/AIFrameSystem.java">AIFrameSystem.java</a>
+ <li><a href="../../workspace/Frame/src/AIInstanceFrame.java">AIInstanceFrame.java</a>
+ <li><a href="../../workspace/Frame/src/AISlot.java">AISlot.java</a>
+ <li><a href="../../workspace/Frame/src/AIWhenConstructedProc.java">AIWhenConstructedProc.java</a>
+ <li><a href="../../workspace/Frame/src/Frame.java">Frame.java</a>
+    <!-- 実装・変更したソースファイルへのリンク．修正する． -->
+    <!-- ※ リンクは絶対パスに変更せず，上記のような相対パスのままで！ -->
+</ul>
+
+<hr>
+
+<h2>必須課題5-1</h2>
+<!-- 課題を書く．-->
+セマンティックネットのプログラムを参考に，グループメンバー全員（およびその周辺人物）についてのセマンティックネットを構築せよ。
+個人作成書類には自分のみ（とその周辺）に関するセマンティックネットを示し，グループ作成書類には全員（とその周辺）に関するセマンティックネットを示せ．  
+<h3>独自仕様の説明</h3>
+<!--
+ もし自分で独自に決めた仕様があれば，その説明を書く．
+-->
+<p>グループで話し合った結果，課題に加えて，以下の三点を独自仕様として組み込んだ．</p>
+
+<ol>
+  <li>指定されたファイルに入力した1文をセマンティックネットとして登録する</li>
+  <li>指定されたファイルに登録されているセマンティックネットをすべて削除する</li>
+  <li>任意の数の質問文に対し適した数を返す。</li>
+</ol>
+
+<p>
+  1.に関して、"w is-a Tomomichi Kenta's-friend"を引数とするとファイルに"w"以降の文字が空白区切りで改行されて書き出される仕様とした。
+</p>
+<p>
+  2.に関しては指定された
+  ファイルの中身をすべて削除する仕様である。
+</p>
+<p>3.に関しては例として"q 2 is-a ?x  Ryota's-friend hobby ?x tennis"というようにqのあとに質問文数、さらに続いて質問文を引数として与えるとその質問文の変数に当てはまるものを返す。</p>
+
+<h3>プログラムの構造</h3>
+<!--  どのような設計をしたか．-->
+<p>
+  実装したプログラムはExample.javaを変更したものである。<br>
+  インスタンスメソッドとして、write_text(),checkBeforeWritefile(),readt(),delete_text()を持つ。<br>
+ write_text() メソッドは引数として実行時に入力された文をもち、それを空白区切りで入力するメソッドである。<br>
+  checkBeforeWritefile() メソッドは引数としてFile型の変数fileをもち、その変数に格納されているfileが実際に存在するのかどうかを判定する。<br>
+  readt() メソッドは指定されたファイルに書かれている内容を1文ずつ保存するメソッドである。<br>
+  delete_text() メソッドは指定されたファイルの中身をすべて削除するメソッドである。
+</p>
+
+
+<h3>実装の説明</h3>
+<!--
+ どう実装したか，ソースコードを詳細に説明する．
+ 特に重要な箇所はレポートにペーストして説明する．
+-->
+<p>
+  実装したプログラムに関して，先に挙げた write_text(),checkBeforeWritefile(),readt(),delete_text() メソッドとmain文における変更の説明を行う。<br>
+  このプログラムにおける実装はすべて新海知道が実装した。
+</p>
+
+<p>
+  下記は write_text() メソッドの実装である．ここで特筆すべき点はファイルに書きこむところにおいて空白区切りで改行してファイルに書き込んでいる点である。
+</p>
+
+<!--
+  ソースコードをはりつける時は <pre> タグを使う
+  class="brush: java" でシンタックスハイライトする
+  重要な部分のみを貼り付ければ良い
+-->
+<pre class="brush: java">
+	public static void write_text(String args[]){
+		try{
+			File file = new File("test.txt");
+
+			if (checkBeforeWritefile(file)){
+				FileWriter filewriter = new FileWriter(file, true);
+
+				filewriter.write("\r\n");
+				filewriter.write(args[1]);
+				filewriter.write("\r\n");
+				filewriter.write(args[2]);
+				filewriter.write("\r\n");
+				filewriter.write(args[3]);
+
+				filewriter.close();
+			}else{
+				System.out.println("ファイルに書き込めません");
+			}
+		}catch(IOException e){
+			System.out.println(e);
+		}
+	}
+</pre>
+
+<p>
+  下記は  checkBeforeWritefile() メソッドの実装である．これはファイルが存在して書き込みできるかどうかをFileクラスのメソッドexists()やcanWrite()で確認している。
+</p>
+
+<!--
+  ソースコードをはりつける時は <pre> タグを使う
+  class="brush: java" でシンタックスハイライトする
+  重要な部分のみを貼り付ければ良い
+-->
+<pre class="brush: java">
+private static boolean checkBeforeWritefile(File file){
+		    if (file.exists()){
+		      if (file.isFile() && file.canWrite()){
+		        return true;
+		      }
+		    }
+
+		    return false;
+		  }
+</pre>
+
+
+<p>
+  下記はreadt()メソッドの実装である。これはファイルに書かれているものを一行ずつStirng型配列に格納している。
+</p>
+
+<!--
+  ソースコードをはりつける時は <pre> タグを使う
+  class="brush: java" でシンタックスハイライトする
+  重要な部分のみを貼り付ければ良い
+-->
+<pre class="brush: java">
+	  File file = new File("test.txt");
+				  BufferedReader br = new BufferedReader(new FileReader(file));
+				  int k =0;
+				  String str;
+
+				  while((str = br.readLine()) != null){
+					  str2[k]=str;
+					  k++;
+				    //System.out.println(str);
+				  }
+</pre>
+<p>
+  下記はdeleat_text()メソッドの実装である。これはファイルをnew FileWriter(file)で作り変えることで、ファイルすべてを削除している。
+</p>
+
+<!--
+  ソースコードをはりつける時は <pre> タグを使う
+  class="brush: java" でシンタックスハイライトする
+  重要な部分のみを貼り付ければ良い
+-->
+<pre class="brush: java">
+	File file = new File("test.txt");
+
+	      if (checkBeforeWritefile(file)){
+	        FileWriter filewriter = new FileWriter(file);
+
+	        filewriter.close();
+</pre>
+
+<p>
+  下記はmain文の実装である。これは実行時に入力された引数の第一引数によってファイル書き込みや質問文に対する答えを返すといった複数の挙動が行える。
+</p>
+
+<!--
+  ソースコードをはりつける時は <pre> タグを使う
+  class="brush: java" でシンタックスハイライトする
+  重要な部分のみを貼り付ければ良い
+-->
+<pre class="brush: java">
+//ファイルに書き込む
+			if(args[0].equals("w")){
+				 write_text(args);
+				 //example [w friends Shinkai Suzuki]
+				 
+				 //現在のファイルの登録されているセマンティックネットをすべて削除
+			 }else if(args[0].equals("delete_all")){
+				 delete_text();
+				 //全部消えるので注意
+			 }else if(args[0].equals("do")){
+
+
+			for(int i=0;i < n/3;i++){
+				sn.addLink(new Link(data[3*i],data[3*i+1],data[3*i+2],sn));
+			}
+
+			sn.printLinks(); //linkの表示
+			sn.printNodes(); //nodeの表示
+
+			ArrayList<Link> query = new ArrayList<Link>();
+			query.add(new Link("like","?y","Hinamatsuri"));
+			query.add(new Link("is-a","?y","NIT-student"));
+			//query.add(new Link("friends","?x","?y"));
+			sn.query(query);
+			
+			//複数の質問文に対応
+			}else if(args[0].equals("q")){
+			//例）q 2 is-a ?x Ryota's-friend hobby ?x tennis 
+
+				for(int i=0;i < n/3;i++){
+					sn.addLink(new Link(data[3*i],data[3*i+1],data[3*i+2],sn));
+				}
+				ArrayList<Link> query = new ArrayList<Link>();
+
+				int m = Integer.parseInt(args[1]);
+				for(int i=0;i < m;i++){
+				query.add(new Link(args[i*3+2],args[i*3+3],args[i*3+4]));
+				}
+				sn.query(query);
+			}
+</pre>
+<p>
+さらにその他の点、詳細は<br>
+<a href="../../../../ckb15070/share/rep5/index.html">こちら</a>
+</p>
+<h3>実行例</h3>
+<!-- 実行例を示す．PNGやGIF等の絵を張っても良い．-->
+<p>
+  実行例としてグループのセマンティックネットと、w,qを第一引数にした場合の挙動を示す。
+  まず最初にグループのセマンティックネットを示す。実行時のリンクを示す。
+</p>
+
+<!-- 画像ファイルを貼る場合は <img> タグを使う -->
+<img src="Gセマンティックネット1.PNG"/><br>
+<img src="Gセマンティックネット2.PNG"/>
+
+<p>
+  引数を"w is-a Tomomichi's-friend Kenta "とした場合の挙動<br>
+  確かにファイルに空白区切りで改行されて書き出されている。
+</p>
+<img src="Gセマw.PNG"/>
+<p>
+  次に引数に"q 2 is-a ?x Ryota's-friend like ?x Hinamatsuri"と入力した場合の挙動を示す。
+</p>
+<img src="Gセマq.PNG"/>
+<h2>必須課題5-2</h2>
+<!-- 以下，上記と同様 -->
+フレームのプログラムを参考に，この課題5を自分達がどう役割分担して進めていくか\\
+に関する知識をフレームで表現せよ。<br>
+例えば，「グループ」のフレーム，「メンバー」のフレーム，「タスク」のフレームが\\
+どのようなスロットを持つかを考え，自分達の事例について記述せよ（この例とは違っ\\
+たフレームを想定しても良い）．<br>
+個人作成書類には自分のみの役割分担に関するフレームを示し，グループ作成書類には\\
+全員分のフレームを示せ．
+<h3>独自仕様の説明</h3>
+<p>グループで話し合った結果，課題に加えて，以下の点を独自仕様として組み込んだ．</p>
+
+<ol>
+  <li>与えられたプログラムでは1つ上の継承先のスロットしか参照できなかったが2個以上のフレーム継承先を参照できる仕様にした。</li>
+</ol>
+<h3>変更したプログラム</h3>
+課題のフレームのプログラムに関して、AIFrame.javaにおいて変更した。
+<h3>実装の説明</h3>
+今回5-2における変更はすべて椙田大輔が行った。<br>
+実際に変更した箇所の詳細は<br>
+<a href="../../../../ckb15073/share/rep5/index.html">こちら</a>
+
+<h3>グループ全員の役割分担に関するフレーム</h3>
+<p>
+ここでグループ全員のフレームを示す。
+トップフレームはhumanであり、スロットに身長と体重が存在する。そのhumanを継承したクラスフレームのmemberにおいて、スロットにどの課題を分担するかのtaskをもつ。<br>
+そのmemberフレームからグループ5人の名前のインスタンスフレーム(Kenta,Tomomichi,Kodai,Ryota,Daisuke)が存在する。<br>
+5人の名前のインスタンスフレームにはスロットは存在しないが、humanとmemberのスロットをもっているため、その5人のインスタンスフレームにおいて各スロット値を以下に示す。
+</p>
+
+<img src="GFrame1.PNG"/><br>
+<img src="GFrame2.PNG"/><br>
+<img src="GFrame3.PNG"/><br>
+<img src="GFrame4.PNG"/>
+<h2>必須課題5-3</h2>
+<!-- 以下，上記と同様 -->
+<p>
+  課題5-2で作ったフレームを用いた質問応答システムを作成せよ．<br>
+  例えば，課題5-1の担当者を質問すると答えられる，など．<br>
+  なお，ユーザの質問は英語や日本語のような自然言語が望ましいが，難しければ課題4で\
+  扱ったような変数を含むパターン (クエリー) でも構わない．
+</p>
+<h3>独自仕様の説明</h3>
+<p>
+  グループで話し合った結果，課題に加えて，以下の点を独自仕様として組み込んだ．
+</p>
+
+<ol>
+  <li>一部の自然言語の質問にも対応する仕様とした。</li>
+</ol>
+<h3>プログラムの変更部分</h3>
+<p>
+  実装したプログラムは主にFrame.java、また一部、AIDemonProcReadTest.java,AIFrame.javaを変更した。
+</p>
+<h3>実装の説明</h3>
+<p>
+  クエリ－による質疑応答は清水涼太が、一部の自然言語による質疑応答は島野広大が実装した。<br>
+  ここでは主な変更をしたFrame.javeにおける変更・追加点を挙げる。<br>
+  クエリーにおける詳細は<a href="../../../../ckb15069/share/rep5/index.html">こちら</a> <br>
+  自然言語における詳細は<a href="../../../../ckb15068/share/rep5/index.html">こちら</a> <br>
+</p>
+
+<p>
+  下記はクエリ－の実装である。<br>
+  引数として質問文を受けとっている。<br>
+  今回の質問文では引数の2つ目となるスロット名には変数が入らないとした。<br>
+  これはグループで話合った結果、スロットの中身は質問されることがあってもスロット自体の名前が聞かれることはまずないだろうという結論に至ったからである。<br>
+  2~21行目でフレームとして登録されているフレーム名をkeylistへ、またそれぞれのフレームが持つスロットを継承先まで辿ってslotlistに格納する。<br>
+  22行目から最後までで、質問文を空白区切りで3つ存在し、かつ2つ目の要素がスロット名として存在する場合はマッチングに入る。<br>
+  マッチングでは引数の1つ目、3つ目のどちらに変数があるか、両方に変数があるのか、または変数がないのかでそれぞれ処理が分かれる。
+  
+</p>
+<pre class="brush: java">
+  void query(String[] string){
+		HashMap< String,AIFrame>temp = new HashMap< String,AIFrame>();
+		//Frameの名前とAIFrame自体を格納
+		temp = fs.solution();
+		//Frameの名前のArrayList
+		ArrayList< String> keylist = new ArrayList< String>(temp.keySet());
+		slotlist = new ArrayList< String>();
+		for(int i=0;i < keylist.size();i++){
+			AIFrame frame = (AIFrame)temp.get(keylist.get(i));
+			ArrayList< String>slot = new ArrayList< String>();
+			Iterator supers = frame.getSupers();
+			while(supers != null && supers.hasNext() == true){
+				frame = (AIFrame) supers.next();
+				slot = frame.solution();
+				for(int j=0; j < slot.size();j++){
+					if(!slotlist.contains(slot.get(j))) 
+						slotlist.add(slot.get(j));
+				}
+				supers = frame.getSupers();
+			}
+		}
+		if(string.length == 3 && slotlist.contains(string[1])){
+			if( var(string[0]) && var(string[2])) varquery3(string);
+			else if( var(string[0]) && !var(string[2])) varquery1(string);
+			else if(!var(string[0]) && var(string[2])) varquery2(string);
+			else{
+				System.out.println(matching(string));
+				return;
+			}
+		}else{
+			System.out.println("error");
+						return;
+						 }			
+ }
+
+</pre>
+<p>
+  下記は自然言語の実装である。<br>
+  質問文1文をsに格納してそのsの中に決まったある言葉が含まれていた場合にその
+  言葉に対応する処理を行う。<br>
+　メンバーそれぞれの名前と"体重"、"身長"、"課題"という言葉に反応する。<br>
+  今回の仕様では決まった言葉が質問文に含まれていたときだけ反応するので、
+　質問文に、ある程度の自由さを実現できた。<br>
+  ｢大輔の身長はいくつですか？｣や｢大輔の身長は？｣など様々な表現に対応できた。
+</p>
+
+
+<pre class="brush: java">
+ System.out.println("質門文を入力,終了:exit,クエリー:query");
+					BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+					String s = br.readLine();
+					if(s.indexOf("exit") != -1) System.exit(0);
+					if(s.indexOf("query") != -1) 
+					{
+						n_or_q = true;
+						}	//モードの切り替え
+					else{
+						
+					
+					String[] data = {"","",""};
+					//フレーム名の確保
+					HashMap< String,AIFrame>temp = new HashMap< String,AIFrame>();
+					temp = fs.solution();
+					ArrayList< String> keylist = new ArrayList< String>(temp.keySet());
+					//フレーム名を格納
+					for(int i = 0;i < keylist.size();i++){
+						if(s.indexOf(keylist.get(i)) != -1) data[0] = keylist.get(i);
+					}
+					if(s.indexOf("健太") != -1) data[0] ="Kenta";
+					if(s.indexOf("知道") != -1) data[0] ="Tomomichi";
+					if(s.indexOf("大輔") != -1) data[0] ="Daisuke";
+					if(s.indexOf("涼太") != -1) data[0] ="Ryota";
+					if(s.indexOf("広大") != -1) data[0] ="Kodai";
+					if(s.indexOf("人間") != -1 || s.indexOf("人類") != -1) data[0] ="human";
+					if(data[0] =="")data[0] = "?x";
+
+
+					//スロットの値を格納
+					//体重に関しての質問
+					if(s.indexOf("体重") != -1){
+						data[1] = "weight";
+						int index = s.indexOf("体重") + "体重".length();
+						if((s.length() - s.substring(0,index).length()) > 1){//「体重」の後に2文字続いているか
+							data[2] = s.substring(index, index +2);
+							if(!isNumber(data[2]))data[2] = "?体重";//体重の後ろの文字が2ケタの数字でないなら
+						}else data[2] = "?体重";
+					}
+					//身長に関しての質問
+					if(s.indexOf("身長") != -1){
+						data[1] = "height";
+						int index = s.indexOf("身長") + "身長".length();
+						
+						if((s.length() - s.substring(0,index).length()) > 2){//「身長」の後に3文字続いているか
+							data[2] = s.substring(index, index +3);
+							if(!isNumber(data[2]))data[2] = "?身長";//身長の後ろの文字が2ケタの数字でないなら
+						}else data[2] = "?身長";
+					}
+					//担当課題に関しての質問
+					if(s.indexOf("課題") != -1 || s.indexOf("担当") != -1){
+						data[1] = "task";
+						int index = s.indexOf("課題") + "課題".length();
+						if((s.length() - s.substring(0,index).length()) > 2){//「課題」の後に3文字続いているか
+							data[2] = s.substring(index, index +3);
+							if(!isNumber(data[2].substring(0,1)) || !isNumber(data[2].substring(3-1)))data[2] = "?課題";////課題の後ろの文字が○-○でないなら
+						}else data[2] = "?課題";
+					}
+					new Frame().query(data);
+					}
+				}
+			}
+</pre>
+
+<h3>実行例</h3>
+<p>
+クエリに対する挙動をのせる<br>
+変数を2つにするとすべて列挙する仕様にしている。<br>
+質問に変数がない場合は"true"or"false"を返す。
+</p>
+<br>
+<img src="Frameex1.png"/> <br>
+
+<p>
+自然言語に対する挙動を示す。<br>
+列挙するときは列挙したいスロット名(身長、課題等)を入力する。
+</p>
+<br>
+<img src="Frameex2.png"/> <br>
+
+<br>
+
+<h2>必須課題5-4</h2>
+<p>
+グループでの進捗管理や成果物共有などについて，工夫した点や使ったツールについて，グループ作成書類fで考察せよ。<br>
+(ヒント) LINE等でも良いが，以下のようなツールやグループウェアも積極的に利用するとよい。
+</p>
+
+<br>
+
+<p>
+グループでの成果物共有としてGithubのツールを使用した。<br>
+GithubでOrganizationを作ってこれを演習のグループとした。<br>
+リポジトリを作成して、commitでファイルやディレクトリの追加・変更とコメントを残すことで変更履歴の管理が容易でできるようになった。<br>
+Githubでは、既存のファイルを更新したときにどの部分が変更されたかが視覚的に理解できるため、作業の効率化がはかれる。<br>
+既にアップロードされているファイルの更新や更新に関してのコメントをつけることはできたが、文字コードを統一できずに文字化けしてしまったり、ソースのどこを更新したのかコメントの義務化をしていないためにどこを更新したのか探すのに時間がかかってしまった。<br>
+次回からは、最初にルールを決めてグループでそのルールを遵守する必要がある。
+
+
+</p>
+<h2>考察</h2>
+<!--
+ 考察を書く．PNGやGIF等の絵を張っても良い．
+ 例: 自分で工夫して解決した点，その解決手法，なぜそうしたのか，その手法の素晴らしさ，上手くいかなかった点，なぜ上手くいかなかったのか，など．
+ 例: 今回はできなかったが，更に〜の機能を追加すべきである．なぜなら，...
+-->
+<p>
+グループ全体として、体重に関するスロットに対する操作が実装できなかった。<br>
+クエリ、自然言語どちらにおいても体重単独の質問に対して答えを返すことができなかった。<br>
+これはデモン処理に対してグループ全体で理解が不足していたためである。<br>
+しかし、自然言語対応の実装やFrame.javaのバグを発見し修正することができた。
+</p>
+
+<hr>
+
+
+<h2>感想</h2>
+<!-- 感想を書く．-->
+<!-- 例: 〜が面白かった，〜がわからなかった，〜を作ってみたい，講義・演習に関する要望，など．-->
+<p>
+初めてのグループでの活動で、全員がさわったことのないgitを扱うことを決めたので、gitを学ぶことからはじまって苦労しました。<br>
+しかし今後の活動に役に立つgitを学ぶことができたのでメンバー全員にとって為になったと思います。
+</p>
+
+
+<h2>参考文献</h2>
+<!-- 参考文献を書く．助けてもらった人がいれば，それも書く-->
+
+<ul>
+  <li>新谷虎松 著（2010）『改訂 知能プログラミング入門』コロナ社</li>
+</ul>
+
+</body>
+</html>
